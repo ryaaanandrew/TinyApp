@@ -60,6 +60,12 @@ app.post('/urls/:shortURL/delete', (req, res) => {
   res.redirect('/urls');
 });
 
+app.post('/login', (req, res) => {
+  let username = req.body.username;
+  res.cookie('user_id', username);
+  res.redirect('/urls');
+});
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 }); // setting PORT number
