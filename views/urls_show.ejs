@@ -8,9 +8,10 @@
   <title>TinyApp</title>
 </head>
 <body style="font-size:20px; padding:50px;">
-  <h1> TinyApp </h1>
-  <a href="#"> Create New TinyURL </a>
-  <h2> TinyURL for <%= longURL %> </h2>
-  <h3> <%= shortURL %> </h3>
+  <h1><b> shortURL: </b> <%= shortURL %> </h1>
+  <form action="/" method="/">
+    <input type="text" placeholder="<%= longURL %>">
+    <button type="submit" class="btn btn-primary">Update</button>
+  </form>
 </body>
 </html>
