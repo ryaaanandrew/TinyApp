@@ -1,24 +1,27 @@
-<!-- views/partials/header.ejs -->
+<h1>TinyApp</h1>
 
-<nav class="navbar navbar-default" role="navigation">
-<div class="container-fluid">
+<%if (!username) { %>
+    <form action="/login" method="POST">
+    <input type="text" name="username">
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+<% } else { %>
+    <h2>Logged in as: <%= username %></h2>
+    <form action="">
+        <button type="submit" class="btn btn-primary">Logout</button>
+    </form>
+<% } %>
 
-    <div class="navbar-header">
-        <a class="navbar-brand" href="#">
-            <span class="glyphicon glyphicon glyphicon-tree-deciduous"></span>
-            EJS Is Fun
-        </a>
 
-        <ul class="nav navbar-nav">
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-        </ul>
 
-        <form action="/login" method="POST">
-            <input type="text" name="username" placeholder="Username">
-            <button type="submit">Submit</button>
-        </form>
-    </div>
 
-</div>
-</nav>
+
+
+
+
+
+
+
+
+
+
