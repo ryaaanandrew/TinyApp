@@ -53,15 +53,21 @@ function checkEmail(email, password) {
   }
 }
 
-
 app.get('/urls', (req, res) => {
   let templateVars = { urls: urlDatabase, username: userDatabase[req.cookies['user_id']]};
   res.render('urls_index', templateVars);
 });
 
 app.get('/urls/new', (req, res) => {
-  let templateVars = { username: userDatabase[req.cookies['user_id']] }
-  res.render('urls_new', templateVars);
+  // let templateVars = {  };
+  const user = userDatabase[req.cookies['user_id']];
+  console.log('user: ', user)
+  if (user) {
+    let templateVars = { user: user, username: userDatabase[req.cookies['user_id']] };
+    res.render('urls_new', templateVars);
+  } else {
+    res.redirect('/register');
+  }
 });
 
 app.get('/urls/:shortURL', (req, res) => {
