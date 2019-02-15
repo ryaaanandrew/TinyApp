@@ -1,8 +1,8 @@
-const express = require('express'); //REQUIRE EXPRESS MIDDLEWARE
+const express = require('express');
 const app = express();
 const PORT = 8080;
-const bodyParser = require('body-parser'); // REQUIRE BODY-PARSER
-const cookieParser = require('cookie-parser') // REQUIRE COOKIE-PARSER
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser')
 
 function generateRandomString() {
     var text = "";
@@ -16,11 +16,13 @@ function generateRandomString() {
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.set('view engine', 'ejs'); // SETS VIEW ENGINE AS EJS
+app.set('view engine', 'ejs');
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
+  "i3BoGr": { longURL: "https://www.google.ca", userID: "aJ48lW" },
+  "asdasd": { longURL: "https://www.facebook.ca", userID: "userRandomID" },
+  "sdfsdf": { longURL: "https://www.youtube.ca", userID: "userRandomID" },
 };
 
 const userDatabase = {
@@ -53,15 +55,36 @@ function checkEmail(email, password) {
   }
 }
 
+function urlsForUser(user_id) {
+  const output = [];
+  for (let shortURL in urlDatabase) {
+    if (user_id === urlDatabase[shortURL].userID) {
+      let urlOutput = {
+        short: shortURL,
+        long: urlDatabase[shortURL].longURL
+      }
+      output.push(urlOutput);
+      // output.push({ short: shortURL, long: urlDatabase[shortURL].longURL });
+    }
+  }
+  console.log('user_id:  ', user_id)
+  return output;
+}
+
 app.get('/urls', (req, res) => {
-  let templateVars = { urls: urlDatabase, username: userDatabase[req.cookies['user_id']]};
-  res.render('urls_index', templateVars);
+   user = userDatabase[req.cookies['user_id']];
+
+  if (user) {
+      let templateVars = {userURLs: urlsForUser(user.id), username: user.id};
+      res.render('urls_index', templateVars);
+  } else {
+      res.redirect('/login');
+  }
 });
 
 app.get('/urls/new', (req, res) => {
-  // let templateVars = {  };
   const user = userDatabase[req.cookies['user_id']];
-  console.log('user: ', user)
+
   if (user) {
     let templateVars = { user: user, username: userDatabase[req.cookies['user_id']] };
     res.render('urls_new', templateVars);
@@ -71,7 +94,12 @@ app.get('/urls/new', (req, res) => {
 });
 
 app.get('/urls/:shortURL', (req, res) => {
-  let templateVars = { shortURL: req.params.shortURL , longURL: urlDatabase[req.params.shortURL], username: userDatabase[req.cookies['user_id']]};
+  let templateVars = {
+    shortURL : req.params.shortURL ,
+    longURL  : urlDatabase[req.params.shortURL],
+    username : userDatabase[req.cookies['user_id']]
+  };
+
   res.render('urls_show', templateVars);
 });
 
@@ -94,12 +122,18 @@ app.post( '/urls', (req, res) => {
   let templateVars = { shortURL: req.params.shortURL , longURL: urlDatabase[req.params.shortURL] };
   let shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;
+
+  urlDatabase[shortURL] = {
+    longURL: req.body.longURL,
+    userID: req.cookies['user_id'],
+  };
   res.redirect(`/urls/${shortURL}`);
-  urlDatabase[shortURL] = urlDatabase[shortURL];
 });
 
 app.post('/urls/:shortURL/delete', (req, res) => {
   let shortURL = req.params.shortURL;
+  const user = urlDatabase[req.cookies['user_id']]
+
   delete urlDatabase[shortURL];
   res.redirect('/urls');
 });
@@ -126,7 +160,6 @@ app.post('/logout', (req, res) => {
 app.post('/register', (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
-  let newUser = {};
   let userEmail = checkEmail(email, password);
 
   if (!email || !password) {
@@ -134,19 +167,16 @@ app.post('/register', (req, res) => {
   }
 
   if(userEmail) {
-    console.log('first if checked')
     res.send("email already on syster 404")
   } else {
-    console.log('second if checked')
     user_id = generateRandomString();
     userDatabase[user_id] = {
       id: user_id,
       email: email,
       password:password,
     }
-    console.log(userDatabase);
     res.redirect("/login");
-  }
+  };
 });
 
 app.listen(PORT, () => {
