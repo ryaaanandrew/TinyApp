@@ -10,9 +10,10 @@
 <body style="font-size:20px; padding:50px;">
   <% include ./partials/header %>
   <h1><b> shortURL: </b> <%= shortURL %> </h1>
-  <form action="/" method="/">
-    <input type="text">
+<form method="POST" action="/urls/<%= shortURL %>">
+    <input class="form-control" type="text" name="updateURL" placeholder="http://" style="width: 300px; margin: 1em">
     <button type="submit" class="btn btn-primary">Update</button>
-  </form>
+</form>
 </body>
 </html>
+
