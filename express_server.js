@@ -2,14 +2,14 @@ const express = require('express');
 const app = express();
 const PORT = 8080;
 const bodyParser = require('body-parser');
-var cookieSession = require('cookie-session');
+const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
 
 function generateRandomString() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let text = "";
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for (var i = 0; i < 6; i++){
+    for (let i = 0; i < 6; i++){
       text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
     return text;
@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.set('view engine', 'ejs');
 
-var urlDatabase = {
+const urlDatabase = {
   "b2xVn2": { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
   "i3BoGr": { longURL: "https://www.google.ca", userID: "aJ48lW" },
   "asdasd": { longURL: "https://www.facebook.ca", userID: "userRandomID" },
