@@ -105,7 +105,7 @@ app.get('/urls/:shortURL', (req, res) => {
   const user = userDatabase[req.session['user_id']];
   let templateVars = {
     shortURL : req.params.shortURL ,
-    longURL  : urlDatabase[req.params.shortURL],
+    longURL  : urlDatabase[req.params.shortURL].longURL,
     username : userDatabase[req.session['user_id']]
   };
 
@@ -159,7 +159,11 @@ app.post( '/urls', (req, res) => {
 
 //update URLS from urls_show.ejs --> unable to edit URLSs
 app.post('/urls/:shortURL', (req, res) => {
-  urlDatabase[req.params.shortURL] = req.body.updateURL
+  let longURL = req.body.updateURL;
+  let shortURL = req.params.shortURL;
+
+  urlDatabase[shortURL].longURL = longURL;
+
   res.redirect('/urls');
 });
 
@@ -193,7 +197,7 @@ app.post('/login', (req, res) => {
 
 //logs out user and clears cookies
 app.post('/logout', (req, res) => {
-  res.clearCookie('user_id');
+  req.session = null;
   res.redirect('/urls');
 });
 
@@ -208,7 +212,7 @@ app.post('/register', (req, res) => {
   }
 
   if(userEmail) {
-    res.send("email already on syster 404")
+    res.send("email already on system 404")
   } else {
     user_id = generateRandomString();
     userDatabase[user_id] = {
@@ -223,11 +227,6 @@ app.post('/register', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
-
-
-
-
-
 
 
 
