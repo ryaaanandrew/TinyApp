@@ -209,9 +209,7 @@ app.post('/register', (req, res) => {
 
   if (!email || !password) {
     res.send('email or password was left blank');
-  }
-
-  if(userEmail) {
+  } else if(userEmail) {
     res.send("email already on system 404")
   } else {
     user_id = generateRandomString();
