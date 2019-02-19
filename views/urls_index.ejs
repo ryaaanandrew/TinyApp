@@ -10,10 +10,12 @@
 <body style="font-size:20px; padding:50px;">
   <% include ./partials/header %>
 
+  <a href="http://localhost:8080/urls/new" class='btn btn-primary'>shorten a URL</a>
+
   <ul>
     <% for (let i = 0; i < userURLs.length; i++) { %>
       <form action="/urls/<%= userURLs[i].short %>/delete" method="POST">
-        <li> <%= userURLs[i].short %>  <%= userURLs[i].long %></li>
+        <li> <%= userURLs[i].short %> - <%= userURLs[i].long %></li>
         <button class='btn btn-primary'>delete</button>
       </form>
       <a href='/urls/<%= userURLs[i].short %>'>EDIT</a>
