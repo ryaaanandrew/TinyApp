@@ -79,7 +79,6 @@ function urlsForUser(user_id) {
 //if user is logged in, will show list of short URLs they have created
 app.get('/urls', (req, res) => {
   let user = userDatabase[req.session['user_id']];
-
   if (user) {
       let templateVars = {userURLs: urlsForUser(user.id), username: userDatabase[req.session['user_id']]};
       res.render('urls_index', templateVars);
@@ -205,11 +204,11 @@ app.post('/logout', (req, res) => {
 app.post('/register', (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
-  let userEmail = checkEmail(email, password);
+  let user = checkEmail(email, password);
 
   if (!email || !password) {
     res.send('email or password was left blank');
-  } else if(userEmail) {
+  } else if(user) {
     res.send("email already on system 404")
   } else {
     user_id = generateRandomString();
@@ -218,7 +217,8 @@ app.post('/register', (req, res) => {
       email: email,
       password: bcrypt.hashSync(password, 10)
     }
-    res.redirect("/login");
+    req.session['user_id'] = userDatabase[user_id].id;
+    res.redirect("/urls");
   };
 });
 
