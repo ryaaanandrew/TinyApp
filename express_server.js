@@ -5,15 +5,6 @@ const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
 
-function generateRandomString() {
-    let text = "";
-    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (let i = 0; i < 6; i++){
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-}
 app.use(cookieSession({
   name: 'session',
   keys: ['super-secret-key'],
@@ -44,6 +35,15 @@ const userDatabase = {
   }
 }
 
+function generateRandomString() {
+  let text = "";
+  let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (let i = 0; i < 6; i++){
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+}
 
 function retrieveUser(email, password) {
   for (let user in userDatabase) {
@@ -207,9 +207,9 @@ app.post('/register', (req, res) => {
   let user = checkEmail(email, password);
 
   if (!email || !password) {
-    res.send('email or password was left blank');
+    res.status(400).send('email or password was left blank.');
   } else if(user) {
-    res.send("email already on system 404")
+    res.status(400).send('email already registered on system.');
   } else {
     user_id = generateRandomString();
     userDatabase[user_id] = {

@@ -15,7 +15,7 @@
   <ul>
     <% for (let i = 0; i < userURLs.length; i++) { %>
       <form action="/urls/<%= userURLs[i].short %>/delete" method="POST">
-        <li> <%= userURLs[i].short %> - <%= userURLs[i].long %></li>
+        <li> <a href="https://<%= userURLs[i].long %>"><%= userURLs[i].short %> </a>- <%= userURLs[i].long %></li>
         <button class='btn btn-primary'>delete</button>
       </form>
       <a href='/urls/<%= userURLs[i].short %>'>EDIT</a>

@@ -10,7 +10,7 @@
 <body style="font-size:20px; padding:50px;">
   <% include ./partials/header %>
 
-  <h1><b> shortURL: </b> <a href="http://<%= longURL %>"><%= shortURL %></a>- <%= longURL %></h1>
+  <h1><b> shortURL: </b> <a href="https://<%= longURL %>"><%= shortURL %></a>- <%= longURL %></h1>
 <form method="POST" action="/urls/<%= shortURL %>">
     <input class="form-control" type="text" name="updateURL" placeholder="http://" style="width: 300px; margin: 1em">
     <button type="submit" class="btn btn-primary">Update</button>
