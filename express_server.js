@@ -75,6 +75,9 @@ function urlsForUser(user_id) {
   }
   return output;
 }
+app.get('/', (req, res) => {
+  res.redirect('/login')
+});
 
 //if user is logged in, will show list of short URLs they have created
 app.get('/urls', (req, res) => {
@@ -83,7 +86,7 @@ app.get('/urls', (req, res) => {
       let templateVars = {userURLs: urlsForUser(user.id), username: userDatabase[req.session['user_id']]};
       res.render('urls_index', templateVars);
   } else {
-      res.redirect('/login');
+    res.status(401).send('Error: 401: You are not authorized, Please <a href="http://localhost:8080/login"> Login </a>');
     }
 });
 
@@ -118,7 +121,11 @@ app.get('/urls/:shortURL', (req, res) => {
 //redirect to longURL 
 app.get('/u/:shortURL', (req, res) => {
   const longURL = urlDatabase[req.params.shortURL].longURL;
-  res.redirect(`http://${longURL}`);
+  if(longURL.toLowerCase().indexOf('http') === 0) {
+    res.redirect(longURL);
+  } else  {
+    res.redirect("http://"+ longURL)
+  }
 });
 
 //displays register page if user is not already logged in
@@ -207,9 +214,9 @@ app.post('/register', (req, res) => {
   let user = checkEmail(email, password);
 
   if (!email || !password) {
-    res.status(400).send('email or password was left blank.');
+    res.status(401).send('Error: 403: information missing, Please <a href="/register"> Go back </a>');
   } else if(user) {
-    res.status(400).send('email already registered on system.');
+    res.status(403).send('Error: 403: please log in <a href="/"> Login </a>');
   } else {
     user_id = generateRandomString();
     userDatabase[user_id] = {
